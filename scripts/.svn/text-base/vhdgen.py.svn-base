@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+#title           :vhdgen.py
+#description     :This will create a header for a .vhd file
+#author          :John Hubberts (originally bgw)
+#date            :20110930 (modified 2013 01 21)
+#version         :1.0
+#usage           :python pyscript.py
+#notes           :
+#python_version  :2.6.6  
+#==============================================================================
+
+# Import the modules needed to run the script.
+from os.path import exists
+from time import strftime
+import os
+
+# Prompt the user for their title
+title = raw_input("Enter entity name: ")
+
+# Set the entity name equal to the filename
+entity = title;
+
+# Add .vhd to the end of the script.
+title = title + '.vhd'
+
+# Convert all letters to lower case.
+title = title.lower()
+
+# Remove spaces from the title.
+title = title.replace(' ', '_')
+
+# Check to see if the file exists to not overwrite it.
+os.chdir("/home/ecegrid/a/mg206/ece437/project2/source/")
+
+if exists(title):
+    print "\nA file with this name already exists."
+    exit(1)
+
+# Get the description for your file
+os.system('clear');
+descrpt = ""
+desline = raw_input("Enter a description (type '.' on a newline to terminate):\n")
+while not desline.startswith("."):
+  descrpt = descrpt + "\n-- " + desline
+  desline = raw_input()
+
+# Set some static personal variables. Set these when you take this script
+name = "John J. Hubberts"
+ver = "1.0"
+arch = raw_input("Enter primary architecture name: ")
+
+# Create a file that can be written to.
+filename = open(title, 'w')
+
+# Set the date automatically.
+date = strftime("%A, %B %d, %Y")
+
+# Determine the length of the header boundries
+linelen = 80;
+
+# Write the data to the file.
+filename.write('--' + '='*linelen + '--')
+filename.write('\n--Title: ' + title)
+filename.write('\n--Description: ' + descrpt)
+filename.write('\n--Author: ' + name)
+filename.write('\n--Date: ' + date)
+filename.write('\n--Version: ' + ver)
+filename.write('\n--' + '='*linelen+'--')
+filename.write('\n\nlibrary ieee;')
+filename.write('\nuse ieee.std_logic_1164.all;')
+filename.write('\n\nentity '+entity+' is')
+filename.write('\n  port();')
+filename.write('\nend '+entity+';')
+filename.write('\n\narchitecture '+arch+' of '+entity+' is')
+filename.write('\n\n  --========================--')
+filename.write('\n  -- COMPONENT DECLARATIONS --')
+filename.write('\n  --========================--')
+filename.write('\n\n  --===================--')
+filename.write('\n  -- SIGNAL DECLARATIONS --')
+filename.write('\n  --=====================--')
+filename.write('\n\nbegin')
+filename.write('\n\nend '+arch+';')
+
+# Close the file after writing to it.
+filename.close()
